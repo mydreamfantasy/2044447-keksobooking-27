@@ -1,7 +1,7 @@
 // функция возврата целого числа, взято из MDN
 
 const getRandomInteger = (min, max) => {
-  if(min >= 0 && max >= 0 && min < max) {
+  if (min >= 0 && max >= 0 && min < max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -14,7 +14,7 @@ getRandomInteger(33, 45);
 
 // функция возврата положительного числа с плавающей точкой
 const getRandomFloat = (min, max, round) => {
-  if(min < 0 || max < 0 || max < min) {
+  if (min < 0 || max < 0 || max < min) {
 
     return NaN;
   }
