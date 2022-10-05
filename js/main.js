@@ -50,6 +50,12 @@ const PHOTOS = [
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg',
 ];
 
+const LAT_MIN = 35.65000;
+const LAT_MAX = 35.70000;
+
+const LNG_MIN = 139.70000;
+const LNG_MAX = 139.80000;
+
 const SIMILAR_ADS = 10;
 
 const getRandomPositiveInteger = (a, b) => {
@@ -62,17 +68,17 @@ const getRandomPositiveInteger = (a, b) => {
   return Math.floor(result);
 };
 
-function getRandomPositiveFloat (a, b, digits = 5) {
+const getRandomPositiveFloat = (a, b, digits = 5) => {
   if (a < 0 || b < 0 || digits < 0) {
     return NaN;
   }
   const lower = Math.min(a, b);
   const upper = Math.max(a, b);
   const result = Math.random() * (upper - lower) + lower;
-  return +result.toFixed(digits);
-}
+  return Number(result.toFixed(digits));
+};
 
-function getArray(array) {
+const getArray = (array) => {
   const maxLength = array.length;
   const lengthOfArray = getRandomPositiveInteger(1, maxLength);
   const arrayRandom = [];
@@ -86,36 +92,47 @@ function getArray(array) {
     }
   }
   return arrayRandom;
-}
+};
 
-const adsNearby = () => {
-  const getRandomArrayElement = (elements) => elements[getRandomPositiveInteger(0, elements.length - 1)];
-  let randomPhotoIndex = getRandomPositiveInteger(1, 10);
-  const randomPrice = getRandomPositiveInteger (0, 10000000);
-  const randomRooms = getRandomPositiveInteger (0, 1000);
-  const randomGuests = getRandomPositiveInteger (0, 1000);
-  const randomLat = getRandomPositiveFloat (35.65000, 35.70000);
-  const randomLng = getRandomPositiveFloat (139.70000, 139.80000);
+const getRandomArrayElement = (elements) => elements[getRandomPositiveInteger(0, elements.length - 1)];
 
-  if (randomPhotoIndex < 10) {
-    randomPhotoIndex = `0${ randomPhotoIndex}`;
-  }
+const makeAvatarIndex = () => {
+  let count = 0;
+
+  return function() {
+    count++;
+    if (count < 10) {
+      count = `0${count}`;
+    }
+
+    return count;
+  };
+};
+
+const counter = makeAvatarIndex();
+
+
+const getAdsNearby = () => {
+  const randomLat = getRandomPositiveFloat (LAT_MIN, LAT_MAX);
+  const randomLng = getRandomPositiveFloat (LNG_MIN, LNG_MAX);
+
 
   return {
-    author: `img/avatars/user${ randomPhotoIndex }.png`,
+    author: {
+      avatar: `img/avatars/user${counter()}.png`,
+    },
     offer: {
       title: getRandomArrayElement(TITLES),
-      address: `${randomLat }, ${ randomLng}`,
-      price: randomPrice,
+      address: `${randomLat}, ${randomLng}`,
+      price: getRandomPositiveInteger(0, 1000000),
       types: getRandomArrayElement(TYPES),
-      rooms: randomRooms,
-      guests: randomGuests,
+      rooms: getRandomPositiveInteger(0, 1000),
+      guests: getRandomPositiveInteger(0, 1000),
       checkin: getRandomArrayElement(CHECKIN),
       checkout: getRandomArrayElement(CHECKOUT),
       features: getArray(FEATURES),
       description: getRandomArrayElement(DESCRIPTION),
       photos: getArray(PHOTOS),
-
     },
     location: {
       lat: randomLat,
@@ -124,5 +141,4 @@ const adsNearby = () => {
   };
 };
 
-
-const similarAds = Array.from({length: SIMILAR_ADS}, adsNearby); // eslint-disable-line no-unused-vars
+const similarAds = Array.from({length: SIMILAR_ADS}, getAdsNearby); // eslint-disable-line no-unused-vars
