@@ -99,11 +99,8 @@ const getRandomArrayElement = (elements) => elements[getRandomPositiveInteger(0,
 const makeAvatarIndex = () => {
   let count = 0;
 
-  return function() {
+  return () => {
     count++;
-    if (count < 10) {
-      count = `0${count}`;
-    }
 
     return count;
   };
@@ -119,7 +116,7 @@ const getAdsNearby = () => {
 
   return {
     author: {
-      avatar: `img/avatars/user${counter()}.png`,
+      avatar: `img/avatars/user${counter().toString().padStart(2, '0')}.png`,
     },
     offer: {
       title: getRandomArrayElement(TITLES),
