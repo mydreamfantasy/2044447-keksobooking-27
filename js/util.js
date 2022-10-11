@@ -46,4 +46,9 @@ const makeCounterIndex = () => {
   };
 };
 
-export {getRandomArrayElement, getRandomPositiveInteger, getRandomPositiveFloat, getArray, makeCounterIndex};
+export {
+  getRandomArrayElement,
+  getRandomPositiveInteger,
+  getRandomPositiveFloat,
+  getArray,
+  makeCounterIndex};

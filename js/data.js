@@ -1,4 +1,9 @@
-import {getRandomArrayElement, getRandomPositiveInteger, getRandomPositiveFloat, getArray, makeCounterIndex} from './util.js';
+import {
+  getRandomArrayElement,
+  getRandomPositiveInteger,
+  getRandomPositiveFloat,
+  getArray,
+  makeCounterIndex} from './util.js';
 
 const TITLES = [
   'Уютный дом',
@@ -91,6 +96,6 @@ const getAdsNearby = () => {
   };
 };
 
-const createAds = () => Array.from({length: SIMILAR_ADS}, getAdsNearby); // eslint-disable-line no-unused-vars
+const createAds = () => Array.from({length: SIMILAR_ADS}, getAdsNearby);
 
 export {createAds};
