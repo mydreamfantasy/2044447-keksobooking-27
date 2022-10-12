@@ -62,7 +62,7 @@ const LAT_MAX = 35.70000;
 const LNG_MIN = 139.70000;
 const LNG_MAX = 139.80000;
 
-const SIMILAR_ADS = 10;
+const SIMILAR_ADS = 1;
 
 const counter = makeCounterIndex();
 
