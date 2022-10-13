@@ -12,7 +12,7 @@ const offerTypeDictionary = {
   hotel: 'Отель',
 };
 
-const renderPopup = ({offer, author}) => {
+const renderPopup = ( {offer, author} ) => {
   const adPopup = similarAdsTemplate.cloneNode(true);
   const {
     title,
@@ -88,20 +88,20 @@ const renderPopup = ({offer, author}) => {
 
 
   if(price) {
-    pricePopup.textContent = `${price } ₽/ночь`;
+    pricePopup.textContent = `${ price } ₽/ночь`;
   } else {
     pricePopup.remove();
   }
 
   if(rooms && guests) {
-    capacityPopup.textContent = `${rooms } ${getDeclension(rooms, 'комната', 'комнаты', 'комнат')} для ${ guests } ${getDeclension(guests, 'гостя', 'гостей', 'гостей')}.`;
+    capacityPopup.textContent = `${ rooms } ${ getDeclension(rooms, 'комната', 'комнаты', 'комнат') } для ${ guests } ${ getDeclension(guests, 'гостя', 'гостей', 'гостей') }.`;
   } else {
     capacityPopup.remove();
   }
 
 
   if(checkin && checkout) {
-    timePopup.textContent = `Заезд после ${ checkin }, выезд до ${ checkout}`;
+    timePopup.textContent = `Заезд после ${ checkin }, выезд до ${ checkout }`;
   } else {
     timePopup.remove();
   }
@@ -121,4 +121,4 @@ const renderPopup = ({offer, author}) => {
   return adPopup;
 };
 
-export {renderPopup};
+export { renderPopup };

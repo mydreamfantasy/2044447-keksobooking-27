@@ -1,5 +1,5 @@
 import { createAds } from './data.js';
-import {renderPopup} from './popup.js';
+import { renderPopup } from './popup.js';
 
 const map = document.querySelector('.map__canvas');
 
