@@ -62,7 +62,7 @@ const LAT_MAX = 35.70000;
 const LNG_MIN = 139.70000;
 const LNG_MAX = 139.80000;
 
-const SIMILAR_ADS = 1;
+const SIMILAR_ADS = 10;
 
 const counter = makeCounterIndex();
 
@@ -81,8 +81,8 @@ const getAdsNearby = () => {
       address: `${randomLat}, ${randomLng}`,
       price: getRandomPositiveInteger(0, 1000000),
       types: getRandomArrayElement(TYPES),
-      rooms: getRandomPositiveInteger(0, 1000),
-      guests: getRandomPositiveInteger(0, 1000),
+      rooms: getRandomPositiveInteger(0, 10),
+      guests: getRandomPositiveInteger(0, 100),
       checkin: getRandomArrayElement(CHECKIN),
       checkout: getRandomArrayElement(CHECKOUT),
       features: getArray(FEATURES),
