@@ -1,24 +1,34 @@
-const getActivePage = (active) => {
 
-  if (active === false) {
+const addAttr = (formField) => {
+  formField.forEach((field) => {
+    field.setAttribute('disabled', 'disabled');
+  });
+};
+
+const deActivatePage = (nonActive) => {
+  if (nonActive) {
     const form = document.querySelector('.ad-form');
-    const formAvatar = form.querySelector('.ad-form-header__input');
-    const formFieldset = form.querySelector('.ad-form__element');
+    const formHeaders = form.querySelectorAll('.ad-form-header');
+    const formFieldsets = form.querySelectorAll('.ad-form__element');
     const mapForm = document.querySelector('.map__filters');
-    const mapFormFieldset = mapForm.querySelector('.map__filter');
+    const mapFormSelects = mapForm.querySelectorAll('.map__filter');
+    const mapFieldsets = mapForm.querySelectorAll('.map__features');
 
-    const addAttribute = (input) => {
-      input.setAttribute('disabled', 'disabled');
-    };
-
+    addAttr(formFieldsets);
+    addAttr(mapFormSelects);
+    addAttr(mapFieldsets);
+    addAttr(formHeaders);
     form.classList.add('ad-form--disabled');
     mapForm.classList.add('map__filters--disabled');
-
-    addAttribute(formAvatar);
-    addAttribute(formFieldset);
-    addAttribute(mapFormFieldset);
   }
 };
 
+const activatePage = (loading) => {
+  if (loading) {
+    return deActivatePage(false);
+  } else {
+    return deActivatePage(true);
+  }
+};
 
-export { getActivePage };
+export { activatePage };
