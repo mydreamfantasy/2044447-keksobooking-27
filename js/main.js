@@ -8,4 +8,6 @@ const ads = createAds();
 const popup = renderPopup(ads[0]);
 
 map.append(popup);
-activatePage();
+activatePage(false);
+activatePage(true);
+
