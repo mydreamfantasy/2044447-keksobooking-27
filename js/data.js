@@ -3,7 +3,7 @@ import {
   getRandomPositiveInteger,
   getRandomPositiveFloat,
   getArray,
-  makeCounterIndex} from './util.js';
+  makeCounterIndex } from './util.js';
 
 const TITLES = [
   'Уютный дом',
@@ -98,4 +98,4 @@ const getAdsNearby = () => {
 
 const createAds = () => Array.from({length: SIMILAR_ADS}, getAdsNearby);
 
-export {createAds};
+export { createAds };
