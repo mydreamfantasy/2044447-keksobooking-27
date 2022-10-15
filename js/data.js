@@ -1,4 +1,9 @@
-import {getRandomArrayElement, getRandomPositiveInteger, getRandomPositiveFloat, getArray, makeCounterIndex} from './util.js';
+import {
+  getRandomArrayElement,
+  getRandomPositiveInteger,
+  getRandomPositiveFloat,
+  getArray,
+  makeCounterIndex} from './util.js';
 
 const TITLES = [
   'Уютный дом',
@@ -75,9 +80,9 @@ const getAdsNearby = () => {
       title: getRandomArrayElement(TITLES),
       address: `${randomLat}, ${randomLng}`,
       price: getRandomPositiveInteger(0, 1000000),
-      types: getRandomArrayElement(TYPES),
-      rooms: getRandomPositiveInteger(0, 1000),
-      guests: getRandomPositiveInteger(0, 1000),
+      type: getRandomArrayElement(TYPES),
+      rooms: getRandomPositiveInteger(0, 10),
+      guests: getRandomPositiveInteger(0, 100),
       checkin: getRandomArrayElement(CHECKIN),
       checkout: getRandomArrayElement(CHECKOUT),
       features: getArray(FEATURES),
@@ -91,6 +96,6 @@ const getAdsNearby = () => {
   };
 };
 
-const createAds = () => Array.from({length: SIMILAR_ADS}, getAdsNearby); // eslint-disable-line no-unused-vars
+const createAds = () => Array.from({length: SIMILAR_ADS}, getAdsNearby);
 
 export {createAds};
