@@ -46,7 +46,8 @@ const makeCounterIndex = () => {
   };
 };
 
-const getDeclension = (number, one, two, five) => {
+const getDeclension = (number, words) => {
+  const [one, two, five] = words;
   let n = Math.abs(number);
   n %= 100;
   if (n >= 5 && n <= 20) {
