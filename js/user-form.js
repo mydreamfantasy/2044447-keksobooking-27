@@ -15,25 +15,33 @@ const activatePage = (active) => {
   const form = document.querySelector('.ad-form');
   const formHeaders = form.querySelectorAll('.ad-form-header');
   const formFieldsets = form.querySelectorAll('.ad-form__element');
+
+  if (active) {
+    removeAttr(formFieldsets);
+    removeAttr(formHeaders);
+    form.classList.remove('ad-form--disabled');
+
+  } else {
+    addAttr(formFieldsets);
+    addAttr(formHeaders);
+    form.classList.add('ad-form--disabled');
+  }
+};
+
+const activateFilter = (mapLoad) => {
   const mapForm = document.querySelector('.map__filters');
   const mapFormSelects = mapForm.querySelectorAll('.map__filter');
   const mapFieldsets = mapForm.querySelectorAll('.map__features');
 
-  if (active) {
-    removeAttr(formFieldsets);
+  if (mapLoad) {
     removeAttr(mapFormSelects);
     removeAttr(mapFieldsets);
-    removeAttr(formHeaders);
-    form.classList.remove('ad-form--disabled');
     mapForm.classList.remove('map__filters--disabled');
   } else {
-    addAttr(formFieldsets);
+    mapForm.classList.add('map__filters--disabled');
     addAttr(mapFormSelects);
     addAttr(mapFieldsets);
-    addAttr(formHeaders);
-    form.classList.add('ad-form--disabled');
-    mapForm.classList.add('map__filters--disabled');
-    }
+  }
 };
 
-export { activatePage };
+export { activatePage, activateFilter };
