@@ -4,19 +4,13 @@ const formFieldsets = form.querySelectorAll('fieldset');
 const mapForm = document.querySelector('.map__filters');
 const mapFieldsets = mapForm.querySelectorAll('fieldset, select');
 
-
-const toggleAttr = (formFields) => {
+const toggleAttr = (formFields, state) => {
   formFields.forEach((field) => {
-
-    if(field.disabled) {
-      field.disabled = true;
-    } else {
-      field.disabled = false;
-    }
+    field.disabled = state;
   });
 };
 
-const activatePage = (active) => {
+const changePageState = (active) => {
   toggleAttr(formFieldsets);
 
   if (active) {
@@ -26,7 +20,7 @@ const activatePage = (active) => {
   }
 };
 
-const activateFilter = (mapLoad) => {
+const changeFilterState = (mapLoad) => {
   toggleAttr(mapFieldsets);
 
   if (mapLoad) {
@@ -36,4 +30,4 @@ const activateFilter = (mapLoad) => {
   }
 };
 
-export { activatePage, activateFilter };
+export { changePageState, changeFilterState };
