@@ -10,24 +10,16 @@ const toggleAttr = (formFields, state) => {
   });
 };
 
-const changePageState = (active) => {
+const deactivatePage = () => {
   toggleAttr(formFieldsets);
-
-  if (active) {
-    form.classList.remove('ad-form--disabled');
-  } else {
-    form.classList.add('ad-form--disabled');
-  }
-};
-
-const changeFilterState = (mapLoad) => {
   toggleAttr(mapFieldsets);
-
-  if (mapLoad) {
-    mapForm.classList.remove('map__filters--disabled');
-  } else {
-    mapForm.classList.add('map__filters--disabled');
-  }
+  form.classList.add('ad-form--disabled');
+  mapForm.classList.add('map__filters--disabled');
 };
 
-export { changePageState, changeFilterState };
+const activateForm = () => {
+  form.classList.remove('ad-form--disabled');
+  toggleAttr(formFieldsets);
+};
+
+export { deactivatePage, activateForm };

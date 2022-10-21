@@ -12,8 +12,6 @@ const START_RANGE = 5000;
 const sliderElement = document.querySelector('.ad-form__slider');
 const valueElement = document.querySelector('#price');
 
-valueElement.value = 80;
-
 noUiSlider.create(sliderElement, {
   range: {
     min: MIN_RANGE,
@@ -21,7 +19,7 @@ noUiSlider.create(sliderElement, {
   },
   start: START_RANGE,
   step: 1,
-  connect: 'lower',
+  connect: 'upper',
   format: {
     to: function (value) {
       if (Number.isInteger(value)) {
@@ -34,20 +32,23 @@ noUiSlider.create(sliderElement, {
   },
 });
 
-sliderElement.noUiSlider.on('update', () => {
+const onSliderChange = () => {
   valueElement.value = sliderElement.noUiSlider.get();
+};
 
-});
+const integerValue = () => {
+  sliderElement.noUiSlider.updateOptions({
+    range: {
+      min: priceField.value = minPrice[typeField.value],
+      max: MAX_RANGE,
+    },
+    step: 1,
+    start: priceField.value = minPrice[typeField.value],
+  });};
 
-typeField.addEventListener('change', (evt) => {
-  if (evt.target.checked) {
-    sliderElement.noUiSlider.updateOptions({
-      range: {
-        min: priceField.value = minPrice[typeField.value],
-        max: MAX_RANGE,
-      },
-      step: 1,
-      start: priceField.value = minPrice[typeField.value],
-    });
-  }
-});
+const initSlider = () => {
+  typeField.addEventListener('change', integerValue);
+  sliderElement.noUiSlider.on('update', onSliderChange);
+};
+
+export { initSlider };

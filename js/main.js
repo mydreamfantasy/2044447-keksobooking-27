@@ -1,10 +1,9 @@
-import { changePageState, changeFilterState } from './user-form.js';
+import { deactivatePage } from './user-form.js';
 import { setupValidation } from './validation.js';
 import { makeMap } from './map.js';
-import './slider.js';
+import { initSlider } from './slider.js';
 
-changePageState(true);
-changeFilterState(false);
+deactivatePage();
 makeMap();
 setupValidation();
-
+initSlider();

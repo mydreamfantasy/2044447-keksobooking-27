@@ -1,25 +1,17 @@
-import { changeFilterState } from './user-form.js';
+import { activateForm } from './user-form.js';
 import { createAds } from './data.js';
 import { renderPopup } from './popup.js';
 
 const START_LAT = 35.68249;
 const START_LNG = 139.75271;
+const ZOOM = 12;
+const ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+const TILE = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 
 const mapCanvas = document.querySelector('#map-canvas');
-const resetButton = document.querySelector('.ad-form__reset');
 const addressField = document.querySelector('#address');
 
 const ads = createAds();
-
-const map = L.map(mapCanvas).setView({lat: START_LAT, lng: START_LNG,}, 12);
-
-L.tileLayer(
-  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-  {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  },
-).addTo(map);
-
 
 const icon = L.icon({
   iconUrl: './img/pin.svg',
@@ -33,6 +25,16 @@ const mainPinIcon = L.icon({
   iconAnchor: [26, 52],
 });
 
+const map = L.map(mapCanvas).setView({lat: START_LAT, lng: START_LNG,}, ZOOM);
+
+L.tileLayer(
+  TILE,
+  {
+    attribution: ATTRIBUTION,
+  },
+).addTo(map);
+
+
 const mainPinMarker = L.marker(
   {
     lat: START_LAT,
@@ -43,22 +45,25 @@ const mainPinMarker = L.marker(
     icon: mainPinIcon,
   },
 );
-mainPinMarker.addTo(map);
 
-mainPinMarker.on('moveend', (evt) => {
-  addressField.placeholder = evt.target.getLatLng();});
+addressField.value = `${START_LAT}, ${START_LNG}`;
 
-resetButton.addEventListener('click', () => {
-  mainPinMarker.setLatLng({
-    lat: START_LAT,
-    lng: START_LNG,
-  });
+const onMarkerMove = (evt) => {
+  const addressValue = `${((evt.target.getLatLng()).lat).toFixed(5) } ,${ ((evt.target.getLatLng()).lng).toFixed(5)}`;
+  addressField.value = addressValue;
+};
 
-  map.setView({
-    lat: START_LAT,
-    lng: START_LNG,
-  }, 12);
-});
+// const resetMap = () => {
+//   mainPinMarker.setLatLng({
+//     lat: START_LAT,
+//     lng: START_LNG,
+//   });
+
+//   map.setView({
+//     lat: START_LAT,
+//     lng: START_LNG,
+//   }, ZOOM);
+// };
 
 const createMarker = (item) => {
   const lat = item.location.lat;
@@ -78,13 +83,17 @@ const createMarker = (item) => {
     .bindPopup(renderPopup(item));
 };
 
-ads.forEach((item) => {
-  createMarker(item);
-});
-
+const renderMarkers = (offers) => {
+  offers.forEach(createMarker);
+};
 
 const makeMap = () => {
-  map.on('load', () => changeFilterState(true));
+  map.on('load', () => {
+    activateForm();
+    renderMarkers(ads);
+  });
+  mainPinMarker.addTo(map);
+  mainPinMarker.on('move', onMarkerMove);
 };
 
 export { makeMap };
