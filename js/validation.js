@@ -49,7 +49,6 @@ const validatePrice = (value) => value.length && parseInt(value, 10) >= minPrice
 const getPriceErrorMessage = () => (`Не меньше ${minPrice[typeField.value]} рублей`);
 const onTypeChange = () => {
   priceField.placeholder = minPrice[typeField.value];
-  priceField.value = minPrice[typeField.value];
   pristine.validate(priceField);
 };
 

@@ -88,7 +88,7 @@ const renderMarkers = (offers) => {
 };
 
 const makeMap = () => {
-  map.on('load', () => {
+  map.whenReady( () => {
     activateForm();
     renderMarkers(ads);
   });
