@@ -1,5 +1,7 @@
-const MIN_TITLE_LENGHT = 30;
-const MAX_TITLE_LENGHT = 100;
+import './map.js';
+
+const MIN_TITLE_LENGTH = 30;
+const MAX_TITLE_LENGTH = 100;
 const MAX_ROOM = 100;
 
 const form = document.querySelector('.ad-form');
@@ -35,8 +37,8 @@ const pristine = new Pristine(form, {
   errorTextClass: 'text-help'
 }, false);
 
-const validateTitle = (value) => value.length >= MIN_TITLE_LENGHT && value.length <= MAX_TITLE_LENGHT;
-const getTitleErrorMessage = () => `От ${MIN_TITLE_LENGHT} до ${MAX_TITLE_LENGHT} символов`;
+const validateTitle = (value) => value.length >= MIN_TITLE_LENGTH && value.length <= MAX_TITLE_LENGTH;
+const getTitleErrorMessage = () => `От ${MIN_TITLE_LENGTH} до ${MAX_TITLE_LENGTH} символов`;
 
 const onCheckChange = ({ target }) => {
   checkin.value = target.value;
@@ -72,4 +74,9 @@ const setupValidation = () => {
   form.addEventListener('submit', onFormSubmit);
 };
 
-export { setupValidation };
+export {
+  setupValidation,
+  priceField,
+  minPrice,
+  typeField
+};

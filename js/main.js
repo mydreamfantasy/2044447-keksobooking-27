@@ -1,14 +1,9 @@
-import { createAds } from './data.js';
-import { renderPopup } from './popup.js';
-import { changePageState, changeFilterState } from './user-form.js';
+import { deactivatePage } from './user-form.js';
 import { setupValidation } from './validation.js';
+import { makeMap } from './map.js';
+import { initSlider } from './slider.js';
 
-const map = document.querySelector('.map__canvas');
-
-const ads = createAds();
-const popup = renderPopup(ads[0]);
-
-map.append(popup);
-changePageState(true);
-changeFilterState(false);
+deactivatePage();
+makeMap();
 setupValidation();
+initSlider();

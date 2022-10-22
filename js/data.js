@@ -79,7 +79,7 @@ const getAdsNearby = () => {
     offer: {
       title: getRandomArrayElement(TITLES),
       address: `${randomLat}, ${randomLng}`,
-      price: getRandomPositiveInteger(0, 1000000),
+      price: getRandomPositiveInteger(0, 100000),
       type: getRandomArrayElement(TYPES),
       rooms: getRandomPositiveInteger(0, 10),
       guests: getRandomPositiveInteger(0, 100),
