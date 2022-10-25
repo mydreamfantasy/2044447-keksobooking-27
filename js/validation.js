@@ -1,4 +1,4 @@
-import './map.js';
+import { sendData } from './api';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -56,9 +56,54 @@ const validateRooms = () => roomOption[roomField.value].includes(guestField.valu
 const getRoomErrorMessage = () => `${roomField.value === MAX_ROOM ? 'Выберете "100 комнат"' : 'Выберете другое количество комнат'}`;
 const getGuestErrorMessage = () => `${roomField.value === MAX_ROOM ? 'Выберете "не для гостей"' : 'Выберете другое количество гостей'}`;
 
+
+const errorMessage = document.querySelector('#error')
+  .content
+  .querySelector('.error');
+
+const successMessage = document.querySelector('#success')
+  .content
+  .querySelector('.success');
+
+const onError = () => {
+  const errorPopup = errorMessage.cloneNode(true);
+  const resetBtn = errorPopup.querySelector('.error__button');
+
+  document.body.append(errorPopup);
+  resetBtn.addEventListener('click', () => {
+    errorPopup.style.display = 'none';
+  });
+};
+
+const onSuccess = () => {
+  const successPopup = successMessage.cloneNode(true);
+  document.body.append(successPopup);
+  const isEscapeKey = (evt) => evt.key === 'Escape';
+
+  const onPopupEscKeydown = (evt) => {
+    if (isEscapeKey(evt)) {
+      evt.preventDefault();
+      closeUserModal();
+    }
+  };
+
+  document.addEventListener('keydown', onPopupEscKeydown);
+
+  const closeUserModal = () => {
+    successPopup.style.display = 'none';
+    document.removeEventListener('keydown', onPopupEscKeydown);
+  };
+};
+
 const onFormSubmit = (evt) => {
   evt.preventDefault();
-  pristine.validate();
+  if(pristine.validate()) {
+    sendData(
+      () => onSuccess(),
+      () => onError(),
+      new FormData(evt.target),
+    );
+  }
 };
 
 const setupValidation = () => {

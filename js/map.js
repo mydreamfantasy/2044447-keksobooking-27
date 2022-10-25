@@ -1,5 +1,4 @@
 import { activateForm } from './user-form.js';
-import { createAds } from './data.js';
 import { renderPopup } from './popup.js';
 
 const START_LAT = 35.68249;
@@ -10,8 +9,6 @@ const TILE = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 
 const mapCanvas = document.querySelector('#map-canvas');
 const addressField = document.querySelector('#address');
-
-const ads = createAds();
 
 const icon = L.icon({
   iconUrl: './img/pin.svg',
@@ -53,17 +50,17 @@ const onMarkerMove = (evt) => {
   addressField.value = addressValue;
 };
 
-// const resetMap = () => {
-//   mainPinMarker.setLatLng({
-//     lat: START_LAT,
-//     lng: START_LNG,
-//   });
+const resetMap = () => {
+  mainPinMarker.setLatLng({
+    lat: START_LAT,
+    lng: START_LNG,
+  });
 
-//   map.setView({
-//     lat: START_LAT,
-//     lng: START_LNG,
-//   }, ZOOM);
-// };
+  map.setView({
+    lat: START_LAT,
+    lng: START_LNG,
+  }, ZOOM);
+};
 
 const createMarker = (item) => {
   const lat = item.location.lat;
@@ -87,7 +84,7 @@ const renderMarkers = (offers) => {
   offers.forEach(createMarker);
 };
 
-const makeMap = () => {
+const makeMap = (ads) => {
   map.whenReady( () => {
     activateForm();
     renderMarkers(ads);
@@ -96,4 +93,4 @@ const makeMap = () => {
   mainPinMarker.on('move', onMarkerMove);
 };
 
-export { makeMap };
+export { makeMap, resetMap };

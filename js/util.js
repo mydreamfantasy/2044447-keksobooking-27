@@ -63,11 +63,12 @@ const getDeclension = (number, words) => {
   return five;
 };
 
+
 export {
   getRandomArrayElement,
   getRandomPositiveInteger,
   getRandomPositiveFloat,
   getArray,
   makeCounterIndex,
-  getDeclension
+  getDeclension,
 };
