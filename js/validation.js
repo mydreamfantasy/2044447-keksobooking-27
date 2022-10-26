@@ -1,4 +1,6 @@
-import { sendData } from './api';
+import { sendData } from './api.js';
+import { resetMap } from './map.js';
+
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -87,12 +89,21 @@ const onSuccess = () => {
     }
   };
 
-  document.addEventListener('keydown', onPopupEscKeydown);
+  const onPopupCloseClick = () => {
+    closeUserModal();
+  };
 
-  const closeUserModal = () => {
+  document.querySelector('.ad-form').reset();
+  resetMap();
+
+  function closeUserModal() {
     successPopup.style.display = 'none';
     document.removeEventListener('keydown', onPopupEscKeydown);
-  };
+    document.addEventListener('click', onPopupCloseClick);
+  }
+
+  document.addEventListener('keydown', onPopupEscKeydown);
+  document.addEventListener('click', onPopupCloseClick);
 };
 
 const onFormSubmit = (evt) => {

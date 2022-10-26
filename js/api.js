@@ -1,4 +1,5 @@
 import { makeMap } from './map.js';
+
 const getData = () => {
   fetch('https://27.javascript.pages.academy/keksobooking/data')
     .then((response) => response.json())
@@ -6,7 +7,6 @@ const getData = () => {
       makeMap(ads);
     });
 };
-
 
 const sendData = (onSuccess, onError, body) => {
   fetch(
@@ -19,8 +19,6 @@ const sendData = (onSuccess, onError, body) => {
     .then((response) => {
       if (response.ok) {
         onSuccess();
-        resetMap();
-        evt.target.reset();
       } else {
         onError();
       }})
