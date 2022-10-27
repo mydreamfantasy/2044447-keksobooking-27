@@ -1,5 +1,5 @@
 import { sendData } from './api.js';
-import { onSendError, onSendSuccess } from './modal.js';
+import { onSendError, onSendSuccess, blockSubmitButton } from './modal.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -57,8 +57,10 @@ const validateRooms = () => roomOption[roomField.value].includes(guestField.valu
 const getRoomErrorMessage = () => `${roomField.value === MAX_ROOM ? 'Выберете "100 комнат"' : 'Выберете другое количество комнат'}`;
 const getGuestErrorMessage = () => `${roomField.value === MAX_ROOM ? 'Выберете "не для гостей"' : 'Выберете другое количество гостей'}`;
 
+
 const onFormSubmit = (evt) => {
   evt.preventDefault();
+  blockSubmitButton();
   if(pristine.validate()) {
     sendData(
       onSendSuccess,

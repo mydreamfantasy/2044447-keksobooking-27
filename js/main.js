@@ -9,4 +9,3 @@ setupValidation();
 initSlider();
 
 makeMap();
-

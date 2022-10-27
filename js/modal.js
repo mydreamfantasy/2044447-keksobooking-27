@@ -9,6 +9,18 @@ const successMessage = document.querySelector('#success')
   .content
   .querySelector('.success');
 
+const submitButton = document.querySelector('.ad-form__submit');
+
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = 'Публикую...';
+};
+
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = 'Опубликовать';
+};
+
 const onSendError = () => {
   const errorPopup = errorMessage.cloneNode(true);
   const resetBtn = errorPopup.querySelector('.error__button');
@@ -16,11 +28,13 @@ const onSendError = () => {
   resetBtn.addEventListener('click', () => {
     errorPopup.remove();
   });
+  unblockSubmitButton();
 };
 
 const onSendSuccess = () => {
   const successPopup = successMessage.cloneNode(true);
   document.body.append(successPopup);
+
 
   const onPopupEscKeydown = (evt) => {
     if (isEscapeKey(evt)) {
@@ -35,6 +49,7 @@ const onSendSuccess = () => {
 
   document.querySelector('.ad-form').reset();
   resetMap();
+  unblockSubmitButton();
 
   function closeUserModal() {
     successPopup.remove();
@@ -46,4 +61,4 @@ const onSendSuccess = () => {
   document.addEventListener('click', onPopupCloseClick);
 };
 
-export { onSendError, onSendSuccess };
+export { onSendError, onSendSuccess, blockSubmitButton };
