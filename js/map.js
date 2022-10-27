@@ -1,11 +1,14 @@
-import { activateForm } from './user-form.js';
+import { activateForm, activateFilter } from './user-form.js';
 import { renderPopup } from './popup.js';
+import { getData } from './api.js';
+import { showAlert } from './util.js';
 
 const START_LAT = 35.68249;
 const START_LNG = 139.75271;
 const ZOOM = 12;
 const ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 const TILE = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+const SIMILAR_ADS_COUNT = 10;
 
 const mapCanvas = document.querySelector('#map-canvas');
 const addressField = document.querySelector('#address');
@@ -30,7 +33,6 @@ L.tileLayer(
     attribution: ATTRIBUTION,
   },
 ).addTo(map);
-
 
 const mainPinMarker = L.marker(
   {
@@ -84,10 +86,19 @@ const renderMarkers = (offers) => {
   offers.forEach(createMarker);
 };
 
-const makeMap = (ads) => {
+const onDataLoad = (ads) => {
+  renderMarkers(ads.slice(0, SIMILAR_ADS_COUNT));
+  activateFilter();
+};
+
+const onDataFailed = () => {
+  showAlert('О, нет! Что-то сломалось. Попробуйте ещё раз');
+};
+
+const makeMap = () => {
   map.whenReady( () => {
     activateForm();
-    renderMarkers(ads);
+    getData(onDataLoad, onDataFailed);
   });
   mainPinMarker.addTo(map);
   mainPinMarker.on('move', onMarkerMove);

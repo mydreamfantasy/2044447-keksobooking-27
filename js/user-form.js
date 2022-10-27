@@ -22,4 +22,9 @@ const activateForm = () => {
   toggleAttr(formFieldsets);
 };
 
-export { deactivatePage, activateForm };
+const activateFilter = () => {
+  mapForm.classList.remove('map__filters--disabled');
+  toggleAttr(mapFieldsets);
+};
+
+export { deactivatePage, activateForm, activateFilter };

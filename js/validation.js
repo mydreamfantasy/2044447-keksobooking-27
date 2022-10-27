@@ -1,6 +1,5 @@
 import { sendData } from './api.js';
-import { resetMap } from './map.js';
-
+import { onSendError, onSendSuccess } from './modal.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -58,60 +57,12 @@ const validateRooms = () => roomOption[roomField.value].includes(guestField.valu
 const getRoomErrorMessage = () => `${roomField.value === MAX_ROOM ? 'Выберете "100 комнат"' : 'Выберете другое количество комнат'}`;
 const getGuestErrorMessage = () => `${roomField.value === MAX_ROOM ? 'Выберете "не для гостей"' : 'Выберете другое количество гостей'}`;
 
-
-const errorMessage = document.querySelector('#error')
-  .content
-  .querySelector('.error');
-
-const successMessage = document.querySelector('#success')
-  .content
-  .querySelector('.success');
-
-const onError = () => {
-  const errorPopup = errorMessage.cloneNode(true);
-  const resetBtn = errorPopup.querySelector('.error__button');
-
-  document.body.append(errorPopup);
-  resetBtn.addEventListener('click', () => {
-    errorPopup.style.display = 'none';
-  });
-};
-
-const onSuccess = () => {
-  const successPopup = successMessage.cloneNode(true);
-  document.body.append(successPopup);
-  const isEscapeKey = (evt) => evt.key === 'Escape';
-
-  const onPopupEscKeydown = (evt) => {
-    if (isEscapeKey(evt)) {
-      evt.preventDefault();
-      closeUserModal();
-    }
-  };
-
-  const onPopupCloseClick = () => {
-    closeUserModal();
-  };
-
-  document.querySelector('.ad-form').reset();
-  resetMap();
-
-  function closeUserModal() {
-    successPopup.style.display = 'none';
-    document.removeEventListener('keydown', onPopupEscKeydown);
-    document.addEventListener('click', onPopupCloseClick);
-  }
-
-  document.addEventListener('keydown', onPopupEscKeydown);
-  document.addEventListener('click', onPopupCloseClick);
-};
-
 const onFormSubmit = (evt) => {
   evt.preventDefault();
   if(pristine.validate()) {
     sendData(
-      () => onSuccess(),
-      () => onError(),
+      onSendSuccess,
+      onSendError,
       new FormData(evt.target),
     );
   }
