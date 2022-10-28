@@ -48,7 +48,7 @@ const mainPinMarker = L.marker(
 addressField.value = `${START_LAT}, ${START_LNG}`;
 
 const onMarkerMove = (evt) => {
-  const addressValue = `${((evt.target.getLatLng()).lat).toFixed(5) } ,${ ((evt.target.getLatLng()).lng).toFixed(5)}`;
+  const addressValue = `${((evt.target.getLatLng()).lat).toFixed(5) }, ${ ((evt.target.getLatLng()).lng).toFixed(5)}`;
   addressField.value = addressValue;
 };
 

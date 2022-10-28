@@ -1,5 +1,6 @@
 import { sendData } from './api.js';
-import { onSendError, onSendSuccess, blockSubmitButton } from './modal.js';
+import { showErrorMessage, showSuccessMessage } from './modal.js';
+import { resetMap } from './map.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -13,6 +14,8 @@ const priceField = form.querySelector('#price');
 const checkin = form.querySelector('#timein');
 const checkout = form.querySelector('#timeout');
 const typeField = form.querySelector('#type');
+const submitButton = form.querySelector('.ad-form__submit');
+const resetForm = document.querySelector('.ad-form');
 
 const minPrice = {
   bungalow: '0',
@@ -46,7 +49,7 @@ const onCheckChange = ({ target }) => {
   checkout.value = target.value;
 };
 
-const validatePrice = (value) => value.length && parseInt(value, 10) >= minPrice[typeField.value];
+const validatePrice = (value) => parseInt(value, 10) >= minPrice[typeField.value];
 const getPriceErrorMessage = () => (`Не меньше ${minPrice[typeField.value]} рублей`);
 const onTypeChange = () => {
   priceField.placeholder = minPrice[typeField.value];
@@ -57,11 +60,33 @@ const validateRooms = () => roomOption[roomField.value].includes(guestField.valu
 const getRoomErrorMessage = () => `${roomField.value === MAX_ROOM ? 'Выберете "100 комнат"' : 'Выберете другое количество комнат'}`;
 const getGuestErrorMessage = () => `${roomField.value === MAX_ROOM ? 'Выберете "не для гостей"' : 'Выберете другое количество гостей'}`;
 
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = 'Публикую...';
+};
+
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = 'Опубликовать';
+};
+
+const onSendSuccess = () => {
+  showSuccessMessage();
+  resetMap();
+  resetForm .reset();
+  unblockSubmitButton();
+};
+
+const onSendError = () => {
+  showErrorMessage();
+  unblockSubmitButton();
+};
 
 const onFormSubmit = (evt) => {
   evt.preventDefault();
-  blockSubmitButton();
-  if(pristine.validate()) {
+
+  if (pristine.validate()) {
+    blockSubmitButton();
     sendData(
       onSendSuccess,
       onSendError,
