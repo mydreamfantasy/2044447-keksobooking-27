@@ -74,20 +74,20 @@ const renderPopup = ({ offer, author }) => {
   fillData(descriptionPopup, description);
   fillData(typePopup, offerTypeDictionary[type]);
 
-  if(features.length > 0) {
+  if(features && features.length > 0) {
     featurePopup.innerHTML = '';
     fillFeatures(featurePopup, features);
   } else {
     featurePopup.remove();
   }
 
-  if(photos.length > 0) {
+  if(photos && photos.length > 0) {
     photoPopup.innerHTML = '';
     fillPhotos(photoPopup, photos, photoTemplate);
   } else {
     photoPopup.remove();
   }
-  //
+
   if(price) {
     pricePopup.innerHTML = `${price} <span>₽/ночь</span>`;
   } else {
