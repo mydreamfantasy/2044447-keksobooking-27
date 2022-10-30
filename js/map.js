@@ -10,8 +10,10 @@ const ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">Op
 const TILE = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 const SIMILAR_ADS_COUNT = 10;
 
+
 const mapCanvas = document.querySelector('#map-canvas');
 const addressField = document.querySelector('#address');
+const mapFieldsets = document.querySelector('.map__filters').querySelectorAll('fieldset, select');
 
 const icon = L.icon({
   iconUrl: './img/pin.svg',
@@ -45,6 +47,11 @@ const mainPinMarker = L.marker(
   },
 );
 
+const addressValueOnDefault = {
+  lat: START_LAT,
+  lng: START_LNG,
+};
+
 addressField.value = `${START_LAT}, ${START_LNG}`;
 
 const onMarkerMove = (evt) => {
@@ -62,6 +69,9 @@ const resetMap = () => {
     lat: START_LAT,
     lng: START_LNG,
   }, ZOOM);
+
+  addressField.value = `${addressValueOnDefault.lat}, ${addressValueOnDefault.lng}`;
+  map.clearLayers();
 };
 
 const createMarker = (item) => {
@@ -82,14 +92,38 @@ const createMarker = (item) => {
     .bindPopup(renderPopup(item));
 };
 
+const housingTypeFilter = document.querySelector('#housing-type');
+const defaultValue = 'any';
+
+const checkHousingType = (ad) => {
+  if (housingTypeFilter.value === defaultValue) {
+    return true;
+  }
+  return ad.offer.type === housingTypeFilter.value;
+};
+
+const filterAds = (ads) => {
+  const filteredAds = [];
+  for (const ad of ads) {
+    if (checkHousingType(ad)) {
+      filteredAds.push(ad);
+    }
+  }
+  return filteredAds;
+};
+
 const renderMarkers = (offers) => {
-  offers.forEach(createMarker);
+  filterAds(offers.slice(0, SIMILAR_ADS_COUNT)).forEach((ad) => {createMarker(ad);});
 };
 
 const onDataLoad = (ads) => {
-  renderMarkers(ads.slice(0, SIMILAR_ADS_COUNT));
+  renderMarkers(ads);
   activateFilter();
 };
+
+mapFieldsets.addEventListener('change', () => {
+
+});
 
 const onDataFailed = () => {
   showAlert('О, нет! Что-то сломалось. Попробуйте ещё раз');
@@ -104,4 +138,4 @@ const makeMap = () => {
   mainPinMarker.on('move', onMarkerMove);
 };
 
-export { makeMap, resetMap };
+export { makeMap, resetMap, renderMarkers };
