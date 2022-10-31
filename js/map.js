@@ -13,7 +13,7 @@ const SIMILAR_ADS_COUNT = 10;
 
 const mapCanvas = document.querySelector('#map-canvas');
 const addressField = document.querySelector('#address');
-const mapFieldsets = document.querySelector('.map__filters').querySelectorAll('fieldset, select');
+const mapFieldset = document.querySelector('.map__filter');
 
 const icon = L.icon({
   iconUrl: './img/pin.svg',
@@ -59,6 +59,8 @@ const onMarkerMove = (evt) => {
   addressField.value = addressValue;
 };
 
+const markerGroup = L.layerGroup().addTo(map);
+
 const resetMap = () => {
   mainPinMarker.setLatLng({
     lat: START_LAT,
@@ -71,7 +73,7 @@ const resetMap = () => {
   }, ZOOM);
 
   addressField.value = `${addressValueOnDefault.lat}, ${addressValueOnDefault.lng}`;
-  map.clearLayers();
+  markerGroup.clearLayers();
 };
 
 const createMarker = (item) => {
@@ -88,12 +90,17 @@ const createMarker = (item) => {
   );
 
   marker
-    .addTo(map)
+    .addTo(markerGroup)
     .bindPopup(renderPopup(item));
 };
 
-const housingTypeFilter = document.querySelector('#housing-type');
 const defaultValue = 'any';
+
+const housingTypeFilter = document.querySelector('#housing-type');
+// const housingPriceFilter = document.querySelector('#housing-price');
+const housingRoomsFilter = document.querySelector('#housing-rooms');
+// const housingGuestsFilter = document.querySelector('#housing-guests');
+// const housingFeaturesFilter = document.querySelector('#housing-features');
 
 const checkHousingType = (ad) => {
   if (housingTypeFilter.value === defaultValue) {
@@ -102,10 +109,22 @@ const checkHousingType = (ad) => {
   return ad.offer.type === housingTypeFilter.value;
 };
 
+const checkRoomType = (ad) => {
+  if (housingRoomsFilter.value === defaultValue) {
+    return true;
+  }
+  return String(ad.offer.type) === housingRoomsFilter.value;
+};
+
 const filterAds = (ads) => {
   const filteredAds = [];
   for (const ad of ads) {
-    if (checkHousingType(ad)) {
+    if (filteredAds.length >= SIMILAR_ADS_COUNT) {
+      break;
+    }
+    if (
+      checkHousingType(ad) && checkRoomType(ad)
+    ) {
       filteredAds.push(ad);
     }
   }
@@ -113,17 +132,29 @@ const filterAds = (ads) => {
 };
 
 const renderMarkers = (offers) => {
-  filterAds(offers.slice(0, SIMILAR_ADS_COUNT)).forEach((ad) => {createMarker(ad);});
+  filterAds(offers).forEach((offer) => {
+    createMarker(offer);
+  });
+};
+
+const clearMapFilter = () => {
+  markerGroup.clearLayers();
+};
+
+const filterChange = (cb) => {
+  mapFieldset.addEventListener('change', () => {
+    cb();
+  });
 };
 
 const onDataLoad = (ads) => {
   renderMarkers(ads);
   activateFilter();
+  filterChange(() => {
+    clearMapFilter();
+    renderMarkers(ads);
+  });
 };
-
-mapFieldsets.addEventListener('change', () => {
-
-});
 
 const onDataFailed = () => {
   showAlert('О, нет! Что-то сломалось. Попробуйте ещё раз');
