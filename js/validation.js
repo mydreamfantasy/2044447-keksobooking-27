@@ -91,7 +91,7 @@ const onFormSubmit = (evt) => {
   if (pristine.validate()) {
     blockSubmitButton();
     sendData(
-      onSendSuccess,
+      onSendSuccess(),
       onSendError,
       new FormData(evt.target),
     );

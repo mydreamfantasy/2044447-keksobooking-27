@@ -2,18 +2,20 @@ import { activateForm, activateFilter } from './user-form.js';
 import { renderPopup } from './popup.js';
 import { getData } from './api.js';
 import { showAlert } from './util.js';
+import { setFilterListener } from './filter.js';
 
-const START_LAT = 35.68249;
-const START_LNG = 139.75271;
 const ZOOM = 12;
 const ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 const TILE = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-const SIMILAR_ADS_COUNT = 10;
+const ADS_COUNT = 10;
 
+const StartCoordinates = {
+  LAT: 35.68249,
+  LNG: 139.75271,
+};
 
 const mapCanvas = document.querySelector('#map-canvas');
 const addressField = document.querySelector('#address');
-const mapFieldset = document.querySelector('.map__filter');
 
 const icon = L.icon({
   iconUrl: './img/pin.svg',
@@ -27,7 +29,7 @@ const mainPinIcon = L.icon({
   iconAnchor: [26, 52],
 });
 
-const map = L.map(mapCanvas).setView({lat: START_LAT, lng: START_LNG,}, ZOOM);
+const map = L.map(mapCanvas).setView({lat: StartCoordinates.LAT, lng: StartCoordinates.LNG,}, ZOOM);
 
 L.tileLayer(
   TILE,
@@ -38,8 +40,8 @@ L.tileLayer(
 
 const mainPinMarker = L.marker(
   {
-    lat: START_LAT,
-    lng: START_LNG,
+    lat: StartCoordinates.LAT,
+    lng: StartCoordinates.LNG,
   },
   {
     draggable: true,
@@ -47,12 +49,9 @@ const mainPinMarker = L.marker(
   },
 );
 
-const addressValueOnDefault = {
-  lat: START_LAT,
-  lng: START_LNG,
+const setDefaultAddress = () => {
+  addressField.value = `${StartCoordinates.LAT}, ${StartCoordinates.LNG}`;
 };
-
-addressField.value = `${START_LAT}, ${START_LNG}`;
 
 const onMarkerMove = (evt) => {
   const addressValue = `${((evt.target.getLatLng()).lat).toFixed(5) }, ${ ((evt.target.getLatLng()).lng).toFixed(5)}`;
@@ -60,21 +59,6 @@ const onMarkerMove = (evt) => {
 };
 
 const markerGroup = L.layerGroup().addTo(map);
-
-const resetMap = () => {
-  mainPinMarker.setLatLng({
-    lat: START_LAT,
-    lng: START_LNG,
-  });
-
-  map.setView({
-    lat: START_LAT,
-    lng: START_LNG,
-  }, ZOOM);
-
-  addressField.value = `${addressValueOnDefault.lat}, ${addressValueOnDefault.lng}`;
-  markerGroup.clearLayers();
-};
 
 const createMarker = (item) => {
   const lat = item.location.lat;
@@ -94,66 +78,36 @@ const createMarker = (item) => {
     .bindPopup(renderPopup(item));
 };
 
-const defaultValue = 'any';
+const renderMarkers = (offers) => offers.forEach(createMarker);
 
-const housingTypeFilter = document.querySelector('#housing-type');
-// const housingPriceFilter = document.querySelector('#housing-price');
-const housingRoomsFilter = document.querySelector('#housing-rooms');
-// const housingGuestsFilter = document.querySelector('#housing-guests');
-// const housingFeaturesFilter = document.querySelector('#housing-features');
-
-const checkHousingType = (ad) => {
-  if (housingTypeFilter.value === defaultValue) {
-    return true;
-  }
-  return ad.offer.type === housingTypeFilter.value;
-};
-
-const checkRoomType = (ad) => {
-  if (housingRoomsFilter.value === defaultValue) {
-    return true;
-  }
-  return String(ad.offer.type) === housingRoomsFilter.value;
-};
-
-const filterAds = (ads) => {
-  const filteredAds = [];
-  for (const ad of ads) {
-    if (filteredAds.length >= SIMILAR_ADS_COUNT) {
-      break;
-    }
-    if (
-      checkHousingType(ad) && checkRoomType(ad)
-    ) {
-      filteredAds.push(ad);
-    }
-  }
-  return filteredAds;
-};
-
-const renderMarkers = (offers) => {
-  filterAds(offers).forEach((offer) => {
-    createMarker(offer);
-  });
-};
-
-const clearMapFilter = () => {
+const clearMap = () => {
   markerGroup.clearLayers();
 };
 
-const filterChange = (cb) => {
-  mapFieldset.addEventListener('change', () => {
-    cb();
+const resetMap = () => {
+  mainPinMarker.setLatLng({
+    lat: StartCoordinates.LAT,
+    lng: StartCoordinates.LNG,
   });
+
+  map.setView({
+    lat: StartCoordinates.LAT,
+    lng: StartCoordinates.LNG,
+  }, ZOOM);
+
+  setDefaultAddress();
+  clearMap();
+};
+
+const rerenderMarkers = (ads) => {
+  clearMap();
+  renderMarkers(ads);
 };
 
 const onDataLoad = (ads) => {
-  renderMarkers(ads);
+  renderMarkers(ads.slice(0, ADS_COUNT));
   activateFilter();
-  filterChange(() => {
-    clearMapFilter();
-    renderMarkers(ads);
-  });
+  setFilterListener(ads);
 };
 
 const onDataFailed = () => {
@@ -165,8 +119,10 @@ const makeMap = () => {
     activateForm();
     getData(onDataLoad, onDataFailed);
   });
+
+  setDefaultAddress();
   mainPinMarker.addTo(map);
   mainPinMarker.on('move', onMarkerMove);
 };
 
-export { makeMap, resetMap, renderMarkers };
+export { makeMap, resetMap, rerenderMarkers, ADS_COUNT };
