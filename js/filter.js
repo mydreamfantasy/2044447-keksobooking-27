@@ -1,6 +1,23 @@
 import { ADS_COUNT, rerenderMarkers } from './map.js';
+import { debounce } from './util.js';
 
 const DEFAULT_VALUE = 'any';
+const RERENDER_DELAY = 500;
+
+const Price = {
+  LOW: {
+    min: '0',
+    max: '10000'
+  },
+  MIDDLE: {
+    min: '10000',
+    max: '50000'
+  },
+  HIGH: {
+    min: '50000',
+    max: '100000'
+  }
+};
 
 const housingTypeFilter = document.querySelector('#housing-type');
 const housingPriceFilter = document.querySelector('#housing-price');
@@ -14,30 +31,22 @@ const checkHousingType = ({ offer }) => offer.type === housingTypeFilter.value |
 const checkRoomAmount = ({ offer }) => String(offer.rooms) === housingRoomsFilter.value || housingRoomsFilter.value === DEFAULT_VALUE;
 const checkGuestsAmount = ({ offer }) => String(offer.guests) === housingGuestsFilter.value || housingGuestsFilter.value === DEFAULT_VALUE;
 const checkPriceRange = ({ offer }) => {
+  const currentPrice = (housingPriceFilter.value).toUpperCase();
 
-  const priceFilterOptions = {
-    'any': offer.price,
-    'low': offer.price < 10000,
-    'middle': offer.price > 10000 && offer.price < 50000,
-    'high': offer.price > 50000
-  };
-
-  return priceFilterOptions[housingPriceFilter.value];
+  return currentPrice === DEFAULT_VALUE ||
+    (offer.price > Price[currentPrice].min && offer.price < Price[currentPrice].max);
 };
 
 const checkHousingFeature = ({ offer }) => {
-  const featureschecked = housingFeaturesFilter.querySelectorAll('input:checked');
-  const checkedList = [];
+  const featuresChecked = housingFeaturesFilter.querySelectorAll('input:checked');
 
-  featureschecked.forEach((input) => checkedList.push(input.value));
-
-  if (checkedList.length === 0) {
+  if (featuresChecked.length === 0) {
     return true;
   }
 
-  if (Object.keys(offer).includes('features')) {
+  if (offer.features) {
     const offerFeatures = offer.features;
-    return checkedList.every((feature) => offerFeatures.includes(feature));
+    return Array.from(featuresChecked).every((input) => offerFeatures.includes(input.value));
   }
 };
 
@@ -69,7 +78,8 @@ const onFormFilterChange = (data) => {
 };
 
 const setFilterListener = (data) => {
-  mapFilters.addEventListener('change', () => onFormFilterChange(data));
+  mapFilters.addEventListener('change', debounce(() => onFormFilterChange(data), RERENDER_DELAY));
+  mapFilters.addEventListener('reset', debounce(() => onFormFilterChange(data), RERENDER_DELAY));
 };
 
 export { setFilterListener };

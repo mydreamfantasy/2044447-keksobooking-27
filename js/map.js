@@ -96,7 +96,6 @@ const resetMap = () => {
   }, ZOOM);
 
   setDefaultAddress();
-  clearMap();
 };
 
 const rerenderMarkers = (ads) => {
