@@ -1,6 +1,7 @@
 import { sendData } from './api.js';
 import { showErrorMessage, showSuccessMessage } from './modal.js';
 import { resetMap } from './map.js';
+import { sliderElement } from './slider.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -15,7 +16,8 @@ const checkin = form.querySelector('#timein');
 const checkout = form.querySelector('#timeout');
 const typeField = form.querySelector('#type');
 const submitButton = form.querySelector('.ad-form__submit');
-const resetForm = document.querySelector('.ad-form');
+const adForm = document.querySelector('.ad-form');
+const mapFilter = document.querySelector('.map__filters');
 
 const minPrice = {
   bungalow: '0',
@@ -72,8 +74,10 @@ const unblockSubmitButton = () => {
 
 const onSendSuccess = () => {
   showSuccessMessage();
+  adForm.reset();
+  mapFilter.reset();
   resetMap();
-  resetForm .reset();
+  sliderElement.noUiSlider.reset();
   unblockSubmitButton();
 };
 

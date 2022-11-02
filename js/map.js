@@ -2,13 +2,17 @@ import { activateForm, activateFilter } from './user-form.js';
 import { renderPopup } from './popup.js';
 import { getData } from './api.js';
 import { showAlert } from './util.js';
+import { setFilterListener } from './filter.js';
 
-const START_LAT = 35.68249;
-const START_LNG = 139.75271;
 const ZOOM = 12;
 const ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 const TILE = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-const SIMILAR_ADS_COUNT = 10;
+const ADS_COUNT = 10;
+
+const StartCoordinates = {
+  LAT: 35.68249,
+  LNG: 139.75271,
+};
 
 const mapCanvas = document.querySelector('#map-canvas');
 const addressField = document.querySelector('#address');
@@ -25,7 +29,7 @@ const mainPinIcon = L.icon({
   iconAnchor: [26, 52],
 });
 
-const map = L.map(mapCanvas).setView({lat: START_LAT, lng: START_LNG,}, ZOOM);
+const map = L.map(mapCanvas).setView({lat: StartCoordinates.LAT, lng: StartCoordinates.LNG,}, ZOOM);
 
 L.tileLayer(
   TILE,
@@ -36,8 +40,8 @@ L.tileLayer(
 
 const mainPinMarker = L.marker(
   {
-    lat: START_LAT,
-    lng: START_LNG,
+    lat: StartCoordinates.LAT,
+    lng: StartCoordinates.LNG,
   },
   {
     draggable: true,
@@ -45,24 +49,16 @@ const mainPinMarker = L.marker(
   },
 );
 
-addressField.value = `${START_LAT}, ${START_LNG}`;
+const setDefaultAddress = () => {
+  addressField.value = `${StartCoordinates.LAT}, ${StartCoordinates.LNG}`;
+};
 
 const onMarkerMove = (evt) => {
   const addressValue = `${((evt.target.getLatLng()).lat).toFixed(5) }, ${ ((evt.target.getLatLng()).lng).toFixed(5)}`;
   addressField.value = addressValue;
 };
 
-const resetMap = () => {
-  mainPinMarker.setLatLng({
-    lat: START_LAT,
-    lng: START_LNG,
-  });
-
-  map.setView({
-    lat: START_LAT,
-    lng: START_LNG,
-  }, ZOOM);
-};
+const markerGroup = L.layerGroup().addTo(map);
 
 const createMarker = (item) => {
   const lat = item.location.lat;
@@ -78,17 +74,39 @@ const createMarker = (item) => {
   );
 
   marker
-    .addTo(map)
+    .addTo(markerGroup)
     .bindPopup(renderPopup(item));
 };
 
-const renderMarkers = (offers) => {
-  offers.forEach(createMarker);
+const renderMarkers = (offers) => offers.forEach(createMarker);
+
+const clearMap = () => {
+  markerGroup.clearLayers();
+};
+
+const resetMap = () => {
+  mainPinMarker.setLatLng({
+    lat: StartCoordinates.LAT,
+    lng: StartCoordinates.LNG,
+  });
+
+  map.setView({
+    lat: StartCoordinates.LAT,
+    lng: StartCoordinates.LNG,
+  }, ZOOM);
+
+  setDefaultAddress();
+};
+
+const rerenderMarkers = (ads) => {
+  clearMap();
+  renderMarkers(ads);
 };
 
 const onDataLoad = (ads) => {
-  renderMarkers(ads.slice(0, SIMILAR_ADS_COUNT));
+  renderMarkers(ads.slice(0, ADS_COUNT));
   activateFilter();
+  setFilterListener(ads);
 };
 
 const onDataFailed = () => {
@@ -100,8 +118,10 @@ const makeMap = () => {
     activateForm();
     getData(onDataLoad, onDataFailed);
   });
+
+  setDefaultAddress();
   mainPinMarker.addTo(map);
   mainPinMarker.on('move', onMarkerMove);
 };
 
-export { makeMap, resetMap };
+export { makeMap, resetMap, rerenderMarkers, ADS_COUNT };

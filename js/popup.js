@@ -95,7 +95,7 @@ const renderPopup = ({ offer, author }) => {
   }
 
   if(rooms && guests) {
-    capacityPopup.textContent = `${rooms} ${getDeclension(rooms, ROOM_WORDS)} для ${guests} ${getDeclension(guests, GUEST_WORDS)}.`;
+    capacityPopup.textContent = `${rooms} ${getDeclension(rooms, ROOM_WORDS)} для ${guests} ${getDeclension(guests, GUEST_WORDS)}`;
   } else {
     capacityPopup.remove();
   }

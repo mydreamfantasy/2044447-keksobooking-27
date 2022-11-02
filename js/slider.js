@@ -29,4 +29,4 @@ const initSlider = () => {
   sliderElement.noUiSlider.on('update', onSliderChange);
 };
 
-export { initSlider };
+export { initSlider, sliderElement };
