@@ -3,42 +3,49 @@ const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 const fileChooserAvatar = document.querySelector('.ad-form__field input[type=file]');
 const previewAvatar = document.querySelector('.ad-form-header__preview img');
 const fileChooserPlace = document.querySelector('.ad-form__upload input[type=file]');
-const photoPlaceContainer = document.querySelector('.ad-form__photo');
+const previewPhoto = document.querySelector('.ad-form__photo');
 
-const makeNewNode = (container, phrase) => {
-  const previewPhoto = container.appendChild(previewAvatar.cloneNode(true));
-  previewPhoto.setAttribute('alt', phrase);
-  return previewPhoto;
+const makeNewNode = (file) => {
+  const previewImg = document.createElement('img');
+  previewImg.src = URL.createObjectURL(file);
+  previewImg.alt = 'Фото жилья';
+  previewImg.style.width = '100%';
+  previewImg.style.height = '100%';
+  previewImg.style.objectFit = 'cover';
+  previewPhoto.append(previewImg);
 };
 
-const makePreviewAvatar = (fileInput, photo) => {
-  fileInput.addEventListener('change', () => {
-    const file = fileInput.files[0];
-    const fileName = file.name.toLowerCase();
+const addPrewiewAvatar = () => {
+  const file = fileChooserAvatar.files[0];
+  const fileName = file.name.toLowerCase();
+  const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
 
-    const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
-
-    if (matches) {
-      photo.src = URL.createObjectURL(file);
-    }
-  });
+  if (matches) {
+    previewAvatar.src = URL.createObjectURL(file);
+  }
 };
 
-const makePreviewPlace = (fileInput, photoContainer, altPhrase) => {
-
-  fileInput.addEventListener('change', () => {
-    const file = fileInput.files[0];
-    const fileName = file.name.toLowerCase();
-    const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
-    const photo = makeNewNode(photoContainer, altPhrase);
-
-    if (matches) {
-      photo.src = URL.createObjectURL(file);
-    }
-  });
-
+const removePreviewImg = () => {
+  if (previewPhoto.children.length > 0) {
+    previewPhoto.children[0].remove();
+  }
 };
-makePreviewAvatar (fileChooserAvatar, previewAvatar);
-makePreviewPlace (fileChooserPlace, photoPlaceContainer, 'Фото жилья');
 
+const addPrewiewPhoto = () => {
+  removePreviewImg();
 
+  const file = fileChooserPlace.files[0];
+  const fileName = file.name.toLowerCase();
+  const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+
+  if (matches) {
+    makeNewNode(file);
+  }
+};
+
+const showPrewiew = () => {
+  fileChooserAvatar.addEventListener('change', addPrewiewAvatar);
+  fileChooserPlace.addEventListener('change', addPrewiewPhoto);
+};
+
+export { showPrewiew, previewPhoto, previewAvatar };

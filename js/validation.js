@@ -2,6 +2,7 @@ import { sendData } from './api.js';
 import { showErrorMessage, showSuccessMessage } from './modal.js';
 import { resetMap } from './map.js';
 import { sliderElement } from './slider.js';
+import { previewAvatar, previewPhoto } from './avatar.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -78,6 +79,8 @@ const onSendSuccess = () => {
   mapFilter.reset();
   resetMap();
   sliderElement.noUiSlider.reset();
+  previewPhoto.innerHTML = '';
+  previewAvatar.src = 'img/muffin-grey.svg';
   unblockSubmitButton();
 };
 
