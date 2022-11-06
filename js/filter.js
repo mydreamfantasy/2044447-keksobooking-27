@@ -31,10 +31,10 @@ const checkHousingType = ({ offer }) => offer.type === housingTypeFilter.value |
 const checkRoomAmount = ({ offer }) => String(offer.rooms) === housingRoomsFilter.value || housingRoomsFilter.value === DEFAULT_VALUE;
 const checkGuestsAmount = ({ offer }) => String(offer.guests) === housingGuestsFilter.value || housingGuestsFilter.value === DEFAULT_VALUE;
 const checkPriceRange = ({ offer }) => {
-  const currentPrice = (housingPriceFilter.value).toUpperCase();
+  const currentPrice = (housingPriceFilter.value);
 
   return currentPrice === DEFAULT_VALUE ||
-    (offer.price > Price[currentPrice].min && offer.price < Price[currentPrice].max);
+    (offer.price > Price[currentPrice.toUpperCase()].min && offer.price < Price[currentPrice.toUpperCase()].max);
 };
 
 const checkHousingFeature = ({ offer }) => {

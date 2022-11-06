@@ -2,6 +2,7 @@ import { sendData } from './api.js';
 import { showErrorMessage, showSuccessMessage } from './modal.js';
 import { resetMap } from './map.js';
 import { sliderElement } from './slider.js';
+import { clearPhotos } from './avatar.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -72,12 +73,17 @@ const unblockSubmitButton = () => {
   submitButton.textContent = 'Опубликовать';
 };
 
-const onSendSuccess = () => {
-  showSuccessMessage();
+const resetPage = () => {
   adForm.reset();
   mapFilter.reset();
   resetMap();
   sliderElement.noUiSlider.reset();
+  clearPhotos();
+};
+
+const onSendSuccess = () => {
+  showSuccessMessage();
+  resetPage();
   unblockSubmitButton();
 };
 
@@ -116,5 +122,6 @@ export {
   setupValidation,
   priceField,
   minPrice,
-  typeField
+  typeField,
+  resetPage
 };
