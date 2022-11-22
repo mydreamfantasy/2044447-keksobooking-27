@@ -28,7 +28,7 @@ jobs:
         run: npm run lint
 
       - name: Build project
-        run: npm run build
+        run: npm run start
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
