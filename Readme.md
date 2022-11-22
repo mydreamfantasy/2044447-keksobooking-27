@@ -4,7 +4,7 @@
 * Наставник: [Алексей Хабиров] (https://htmlacademy.ru/profile/alex_khab).
 
 ---
-
+Проект по ссылке (https://mydreamfantasy.github.io/keksobooking/)
 _Не удаляйте и не изменяйте самовольно файлы и папки:_
 _`.editorconfig`, `.eslintrc`, `.gitattributes`, `.gitignore`, `package-lock.json`, `package.json`., `.github`_
 
